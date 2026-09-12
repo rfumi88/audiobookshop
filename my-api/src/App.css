@@ -1,0 +1,389 @@
+:root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color: var(--text);
+    background: var(--bg);
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    --bg: #ffffff;
+    --card: #f7f7f7;
+    --text: #222222;
+    --text-secondary: #666666;
+    --border: #dddddd;
+    --input: #ffffff;
+    --button: #eeeeee;
+    --button-text: #222222;
+    --accent: #aa3bff;
+    --success: #198754;
+    --error: #dc3545;
+}
+
+:root[data-theme='dark'] {
+    --bg: #1e1e1e;
+    --card: #2b2b2b;
+    --text: #f1f1f1;
+    --text-secondary: #bbbbbb;
+    --border: #555555;
+    --input: #333333;
+    --button: #555555;
+    --button-text: #ffffff;
+    --accent: #c084fc;
+    --success: #55c985;
+    --error: #ff6b6b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+h1,
+h2,
+h3 {
+    color: var(--text);
+}
+
+p {
+    color: var(--text);
+}
+
+#root {
+    width: 100%;
+    max-width: 1126px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+/* Меню */
+
+.menu {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 25px;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+}
+
+.menu-link {
+    padding: 8px 10px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.menu-link:hover {
+    text-decoration: underline;
+}
+
+.menu-link.active {
+    color: red;
+    font-weight: bold;
+}
+
+.menu-user {
+    margin: 0 5px 0 10px;
+    color: var(--text);
+}
+
+.menu-button {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--button);
+    color: var(--button-text);
+}
+
+.menu-button:hover {
+    opacity: 0.85;
+}
+
+.theme-button {
+    margin-left: auto;
+}
+
+
+/* Общие элементы */
+
+.page {
+    min-height: 100vh;
+    padding: 20px 0;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.card {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.button {
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--button);
+    color: var(--button-text);
+}
+
+.button:hover {
+    opacity: 0.85;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--input);
+    color: var(--text);
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.error {
+    margin-bottom: 15px;
+    color: var(--error);
+}
+
+.success {
+    margin-bottom: 15px;
+    color: var(--success);
+}
+
+.muted {
+    color: var(--text-secondary);
+}
+
+.form-card {
+    width: 100%;
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+}
+
+.catalog-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.categories {
+    flex-shrink: 0;
+    width: 220px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.category-label {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.category-label span {
+    margin-left: 8px;
+}
+
+.catalog {
+    flex: 1;
+}
+
+.service-card {
+    padding: 20px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.service-image {
+    display: block;
+    width: 180px;
+    height: 260px;
+    margin: 0 auto 15px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.discount {
+    color: var(--success);
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.quantity-button {
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--button);
+    color: var(--button-text);
+}
+
+.order-summary {
+    padding: 20px;
+    margin-top: 25px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.order-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+}
+
+.loading {
+    padding: 20px;
+}
+
+.empty {
+    padding: 20px;
+}
+
+.admin-section {
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.admin-item {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-item:last-child {
+    border-bottom: none;
+}
+
+.admin-inline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-toolbar {
+    margin-bottom: 15px;
+}
+
+.small-input {
+    width: 80px;
+}
+
+.medium-input {
+    width: 300px;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination-info {
+    min-width: 140px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    #root {
+        padding: 15px;
+    }
+
+    .catalog-layout {
+        flex-direction: column;
+    }
+
+    .categories {
+        width: 100%;
+    }
+
+    .service-image {
+        width: 150px;
+        height: 220px;
+    }
+
+    .medium-input {
+        width: 100%;
+    }
+
+    .admin-inline {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+    }
+}
