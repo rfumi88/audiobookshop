@@ -29,7 +29,7 @@ app.get('/api/test', (req, res) =>
 
 app.get('/api/db-test', wrap(async (req, res) => {
     const r = await pool.query('SELECT NOW()');
-    res.json({ message: 'Подключение к PostgreSQL работает!', databaseTime: r.rows[0].now });
+    res.json({ message: 'Подключение к PostgreSQL работает', databaseTime: r.rows[0].now });
 }));
 
 //аудиокниги
