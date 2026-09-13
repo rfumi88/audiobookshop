@@ -1,117 +1,82 @@
 const API_URL = 'http://localhost:5000/api/cart';
 
-async function checkResponse(response, message) {
-    const data = await response.json();
+export async function getCart(userId) {
+    const response = await fetch(
+        `${API_URL}/${userId}`
+    );
 
     if (!response.ok) {
-        throw new Error(data.error || data.details || message);
+        throw new Error('Ошибка при получении корзины');
     }
 
-    return data;
+    return await response.json();
 }
 
-export async function getCart(userId) {
-    try {
-        const response = await fetch(`${API_URL}/${userId}`);
+export async function addToCart(
+    userId,
+    serviceId,
+    quantity = 1
+) {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId,
+            serviceId,
+            quantity
+        })
+    });
 
-        return await checkResponse(
-            response,
-            'Не удалось загрузить корзину'
+    if (!response.ok) {
+        throw new Error(
+            'Ошибка при добавлении аудиокниги в корзину'
         );
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                'Не удалось подключиться к серверу',
-                { cause: error }
-            );
-        }
-
-        throw error;
     }
+
+    return await response.json();
 }
 
-export async function addToCart(userId, serviceId, quantity = 1) {
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
+export async function updateCartItem(
+    itemId,
+    quantity
+) {
+    const response = await fetch(
+        `${API_URL}/item/${itemId}`,
+        {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                userId,
-                serviceId,
                 quantity
             })
-        });
-
-        return await checkResponse(
-            response,
-            'Не удалось добавить аудиокнигу в корзину'
-        );
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                'Не удалось подключиться к серверу',
-                { cause: error }
-            );
         }
+    );
 
-        throw error;
-    }
-}
-
-export async function updateCartItem(itemId, quantity) {
-    try {
-        const response = await fetch(
-            `${API_URL}/item/${itemId}`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    quantity
-                })
-            }
+    if (!response.ok) {
+        throw new Error(
+            'Ошибка при изменении количества'
         );
-
-        return await checkResponse(
-            response,
-            'Не удалось изменить количество'
-        );
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                'Не удалось подключиться к серверу',
-                { cause: error }
-            );
-        }
-
-        throw error;
     }
+
+    return await response.json();
 }
 
 export async function removeFromCart(itemId) {
-    try {
-        const response = await fetch(
-            `${API_URL}/item/${itemId}`,
-            {
-                method: 'DELETE'
-            }
-        );
-
-        return await checkResponse(
-            response,
-            'Не удалось удалить товар'
-        );
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                'Не удалось подключиться к серверу',
-                { cause: error }
-            );
+    const response = await fetch(
+        `${API_URL}/item/${itemId}`,
+        {
+            method: 'DELETE'
         }
+    );
 
-        throw error;
+    if (!response.ok) {
+        throw new Error(
+            'Ошибка при удалении товара'
+        );
     }
+
+    return await response.json();
 }

@@ -1,39 +1,15 @@
 const API_URL = 'http://localhost:5000/api/users';
 
-async function checkResponse(response, message) {
-    const data = await response.json();
+export async function getUsers() {
+    const response = await fetch(API_URL);
 
     if (!response.ok) {
         throw new Error(
-            data.error || data.details || message
+            'Ошибка при получении пользователей'
         );
     }
 
-    return data;
-}
-
-function handleError(error) {
-    if (error instanceof TypeError) {
-        throw new Error(
-            'Не удалось подключиться к серверу',
-            { cause: error }
-        );
-    }
-
-    throw error;
-}
-
-export async function getUsers() {
-    try {
-        const response = await fetch(API_URL);
-
-        return await checkResponse(
-            response,
-            'Не удалось загрузить пользователей'
-        );
-    } catch (error) {
-        handleError(error);
-    }
+    return await response.json();
 }
 
 export async function getAdminUsers(
@@ -47,18 +23,17 @@ export async function getAdminUsers(
         limit
     });
 
-    try {
-        const response = await fetch(
-            `${API_URL}?${params}`
-        );
+    const response = await fetch(
+        `${API_URL}?${params}`
+    );
 
-        return await checkResponse(
-            response,
-            'Не удалось загрузить пользователей'
+    if (!response.ok) {
+        throw new Error(
+            'Ошибка при получении пользователей'
         );
-    } catch (error) {
-        handleError(error);
     }
+
+    return await response.json();
 }
 
 export async function updateUserDiscount(
@@ -66,26 +41,25 @@ export async function updateUserDiscount(
     couponCode,
     discountPercent
 ) {
-    try {
-        const response = await fetch(
-            `${API_URL}/${userId}/discount`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    coupon_code: couponCode,
-                    discount_percent: discountPercent
-                })
-            }
-        );
+    const response = await fetch(
+        `${API_URL}/${userId}/discount`,
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                coupon_code: couponCode,
+                discount_percent: discountPercent
+            })
+        }
+    );
 
-        return await checkResponse(
-            response,
-            'Не удалось изменить скидку пользователя'
+    if (!response.ok) {
+        throw new Error(
+            'Ошибка при изменении скидки пользователя'
         );
-    } catch (error) {
-        handleError(error);
     }
+
+    return await response.json();
 }
