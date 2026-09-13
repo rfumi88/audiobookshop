@@ -1,18 +1,18 @@
 const API_URL = 'http://localhost:5000/api/appointments';
 
-function checkResponse(response, message) {
-    return response.json().then((data) => {
-        if (!response.ok) {
-            throw new Error(data.error || data.details || message);
-        }
-        return data;
-    });
+async function checkResponse(response, message) {
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || data.details || message);
+    }
+
+    return data;
 }
 
-export function createOrder(userId) {
-    return fetch(
-        `${API_URL}/checkout`,
-        {
+export async function createOrder(userId) {
+    try {
+        const response = await fetch(`${API_URL}/checkout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -20,40 +20,42 @@ export function createOrder(userId) {
             body: JSON.stringify({
                 userId
             })
-        }
-    )
-        .then((response) =>
-            checkResponse(
-                response,
-                'Не удалось оформить заказ'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
         });
+
+        return await checkResponse(
+            response,
+            'Не удалось оформить заказ'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
+        }
+
+        throw error;
+    }
 }
 
-export function getUserOrders(userId) {
-    return fetch(
-        `${API_URL}/user/${userId}`
-    )
-        .then((response) =>
-            checkResponse(
-                response,
-                'Не удалось загрузить заказы'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
-        });
+export async function getUserOrders(userId) {
+    try {
+        const response = await fetch(
+            `${API_URL}/user/${userId}`
+        );
+
+        return await checkResponse(
+            response,
+            'Не удалось загрузить заказы'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
+        }
+
+        throw error;
+    }
 }

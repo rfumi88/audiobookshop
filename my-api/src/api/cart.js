@@ -1,108 +1,117 @@
 const API_URL = 'http://localhost:5000/api/cart';
 
-function checkResponse(response, message) {
-    return response.json().then((data) => {
-        if (!response.ok) {
-            throw new Error(data.error || data.details || message);
+async function checkResponse(response, message) {
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || data.details || message);
+    }
+
+    return data;
+}
+
+export async function getCart(userId) {
+    try {
+        const response = await fetch(`${API_URL}/${userId}`);
+
+        return await checkResponse(
+            response,
+            'Не удалось загрузить корзину'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
         }
-        return data;
-    });
+
+        throw error;
+    }
 }
 
-export function getCart(userId) {
-    return fetch(`${API_URL}/${userId}`)
-        .then((response) =>
-            checkResponse(
-                response,
-                'Не удалось загрузить корзину'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
-        });
-}
-
-export function addToCart(userId, serviceId, quantity = 1) {
-    return fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            userId,
-            serviceId,
-            quantity
-        })
-    })
-        .then((response) =>
-            checkResponse(
-                response,
-                'Не удалось добавить аудиокнигу в корзину'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
-        });
-}
-
-export function updateCartItem(itemId,quantity) {
-    return fetch(
-        `${API_URL}/item/${itemId}`,
-        {
-            method: 'PUT',
+export async function addToCart(userId, serviceId, quantity = 1) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                userId,
+                serviceId,
                 quantity
             })
-        }
-    )
-        .then((response) =>
-            checkResponse(
-                response,
-                'Не удалось изменить количество'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
         });
+
+        return await checkResponse(
+            response,
+            'Не удалось добавить аудиокнигу в корзину'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
+        }
+
+        throw error;
+    }
 }
 
-export function removeFromCart(itemId) {
-    return fetch(
-        `${API_URL}/item/${itemId}`,
-        {
-            method: 'DELETE'
-        }
-    )
-        .then((response) =>
-            checkResponse(
-                response,
-                'Не удалось удалить товар'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
+export async function updateCartItem(itemId, quantity) {
+    try {
+        const response = await fetch(
+            `${API_URL}/item/${itemId}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    quantity
+                })
             }
-            throw error;
-        });
+        );
+
+        return await checkResponse(
+            response,
+            'Не удалось изменить количество'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
+        }
+
+        throw error;
+    }
+}
+
+export async function removeFromCart(itemId) {
+    try {
+        const response = await fetch(
+            `${API_URL}/item/${itemId}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        return await checkResponse(
+            response,
+            'Не удалось удалить товар'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
+        }
+
+        throw error;
+    }
 }

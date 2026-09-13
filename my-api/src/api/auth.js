@@ -1,61 +1,66 @@
 const API_URL = 'http://localhost:5000/api/auth';
 
-function checkResponse(response, message) {
-    return response.json().then((data) => {
-        if (!response.ok) {
-            throw new Error(data.error || data.details || message);
+async function checkResponse(response, message) {
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || data.details || message);
+    }
+
+    return data;
+}
+
+export async function loginUser(email, password) {
+    try {
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        });
+
+        return await checkResponse(
+            response,
+            'Ошибка авторизации'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
         }
-        return data;
-    });
+
+        throw error;
+    }
 }
 
-export function loginUser(email, password) {
-    return fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email,
-            password
-        })
-    })
-        .then((response) =>
-            checkResponse(
-                response,
-                'Ошибка авторизации'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
+export async function registerUser(userData) {
+    try {
+        const response = await fetch(`${API_URL}/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
         });
-}
 
-export function registerUser(userData) {
-    return fetch(`${API_URL}/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    })
-        .then((response) =>
-            checkResponse(
-                response,
-                'Ошибка регистрации'
-            )
-        )
-        .catch((error) => {
-            if (error instanceof TypeError) {
-                throw new Error(
-                    'Не удалось подключиться к серверу'
-                );
-            }
-            throw error;
-        });
+        return await checkResponse(
+            response,
+            'Ошибка регистрации'
+        );
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                'Не удалось подключиться к серверу',
+                { cause: error }
+            );
+        }
+
+        throw error;
+    }
 }
