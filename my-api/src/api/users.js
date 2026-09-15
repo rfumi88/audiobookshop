@@ -1,15 +1,20 @@
 const API_URL = 'http://localhost:5000/api/users';
 
 export async function getUsers() {
-    const response = await fetch(API_URL);
+    try {
+        const response = await fetch(API_URL);
 
-    if (!response.ok) {
-        throw new Error(
-            'Ошибка при получении пользователей'
-        );
+        if (!response.ok) {
+            throw new Error(
+                'Ошибка при получении пользователей'
+            );
     }
 
     return await response.json();
+    } catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
+    
 }
 
 export async function getAdminUsers(
@@ -17,7 +22,9 @@ export async function getAdminUsers(
     page = 1,
     limit = 5
 ) {
-    const params = new URLSearchParams({
+    try {
+
+        const params = new URLSearchParams({
         search,
         page,
         limit
@@ -34,6 +41,11 @@ export async function getAdminUsers(
     }
 
     return await response.json();
+    }
+    catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
+    
 }
 
 export async function updateUserDiscount(
@@ -41,7 +53,8 @@ export async function updateUserDiscount(
     couponCode,
     discountPercent
 ) {
-    const response = await fetch(
+    try {
+        const response = await fetch(
         `${API_URL}/${userId}/discount`,
         {
             method: 'PUT',
@@ -62,4 +75,8 @@ export async function updateUserDiscount(
     }
 
     return await response.json();
+    }
+    catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
 }

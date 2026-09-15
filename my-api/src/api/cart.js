@@ -1,17 +1,21 @@
 const API_URL = 'http://localhost:5000/api/cart';
 
 export async function getCart(userId) {
-    const response = await fetch(
-        `${API_URL}/${userId}`
-    );
+     try {
+        const response = await fetch(
+            `${API_URL}/${userId}`
+        );
 
-    if (!response.ok) {
-        throw new Error('Ошибка при получении корзины');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении корзины');
     }
 
-    return await response.json();
+        return await response.json();
+    } catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
 }
-
+    
 export async function addToCart(
     userId,
     serviceId,

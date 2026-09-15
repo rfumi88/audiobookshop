@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = localStorage.getItem('user'); //тернарный оператор
     const [user, setUser] = useState(savedUser ? JSON.parse(savedUser) : null);
 
     const login = userData => {

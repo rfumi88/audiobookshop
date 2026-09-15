@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { loginUser } from '../api/auth';
 import { AuthContext } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const { login } = useContext(AuthContext);
@@ -10,6 +11,7 @@ function Login() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -27,6 +29,7 @@ function Login() {
             .then(data => {
                 login(data.user);
                 setSuccess(data.message);
+                navigate('/');
             })
             .catch(error => {
                 setError(error.message || 'Ошибка авторизации');

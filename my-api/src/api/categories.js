@@ -1,17 +1,23 @@
 const API_URL = 'http://localhost:5000/api/categories';
 
 export async function getCategories() {
-    const response = await fetch(API_URL);
+    try{
+        const response = await fetch(API_URL);
 
     if (!response.ok) {
         throw new Error('Ошибка при получении категорий');
     }
 
     return await response.json();
+    }
+    catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
 }
 
 export async function createCategory(category) {
-    const response = await fetch(API_URL, {
+    try {
+        const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -24,10 +30,17 @@ export async function createCategory(category) {
     }
 
     return await response.json();
+
+    }
+    catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
+    
 }
 
 export async function deleteCategory(categoryId) {
-    const response = await fetch(
+    try{
+        const response = await fetch(
         `${API_URL}/${categoryId}`,
         {
             method: 'DELETE'
@@ -39,4 +52,10 @@ export async function deleteCategory(categoryId) {
     }
 
     return await response.json();
+
+    }
+    catch {
+        throw new Error('Не удалось подключиться к серверу');
+    }
+    
 }

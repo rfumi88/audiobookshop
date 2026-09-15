@@ -50,7 +50,7 @@ app.get('/api/services', wrap(async (req, res) => {
     const q = `%${search?.trim() || ''}%`;
     const where = `WHERE s.is_active = TRUE AND (s.service_name ILIKE $1 OR s.author ILIKE $1)`;
     const [count, items] = await Promise.all([
-        pool.query(`SELECT COUNT(*) FROM services s ${where}`, [q]),
+        pool.query(`SELECT COUNT(*) FROM services s ${where}`, [q]), 
         pool.query(`
             SELECT s.*, c.id_category, c.category_name
             FROM services s JOIN categories c ON c.id_category = s.category_id
@@ -264,10 +264,16 @@ app.post('/api/auth/register', wrap(async (req, res) => {
     if (!email || !password || !first_name)
         return error(res, 400, 'Необходимо заполнить email, пароль и имя');
 
+    if (phone && !/^\+?\d{10,15}$/.test(phone)) {
+        return error(res, 400, 'Неверный формат номера телефона');
+    }
+        
+
     const exists = await pool.query(
         'SELECT id_user FROM users WHERE email = $1',
         [email]
     );
+
 
     if (exists.rows.length)
         return error(res, 400, 'Пользователь с таким email уже существует');

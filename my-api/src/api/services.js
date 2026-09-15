@@ -1,13 +1,17 @@
 const API_URL = 'http://localhost:5000/api/services';
 
 export async function getServices() {
-    const response = await fetch(API_URL);
+    try {
+        const response = await fetch(API_URL);
 
-    if (!response.ok) {
-        throw new Error('Ошибка при получении аудиокниг');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении аудиокниг');
+        }
+
+        return await response.json();
+    } catch {
+        throw new Error('Не удалось подключиться к серверу');
     }
-
-    return await response.json();
 }
 
 export async function getAdminServices(

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { registerUser } from '../api/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
     const [form, setForm] = useState({
@@ -14,6 +15,10 @@ function Register() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const nameRegex = /^[А-Яа-яЁёA-Za-z-]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^\+?\d{10,15}$/;
 
     const handleChange = event => {
         const { name, value } = event.target;
@@ -30,6 +35,55 @@ function Register() {
             return;
         }
 
+        if (form.phone && !phoneRegex.test(form.phone)) {   
+            setError('Неверный формат номера телефона');
+            return;
+        }                               
+        if (form.first_name.trim().length < 2) {
+            setError('Имя должно содержать минимум 2 символа');
+            return;
+        }
+
+        if (!nameRegex.test(form.first_name.trim())) {
+            setError('Имя может содержать только буквы');
+            return;
+        }
+
+        if (form.last_name.trim() && form.last_name.trim().length < 2) {
+            setError('Фамилия должна содержать минимум 2 символа');
+            return;
+        }
+
+        if (form.last_name.trim() && !nameRegex.test(form.last_name.trim())) {
+            setError('Фамилия может содержать только буквы');
+            return;
+        }
+
+        if (form.middle_name.trim() && form.middle_name.trim().length < 2) {
+            setError('Отчество должно содержать минимум 2 символа');
+            return;
+        }
+
+        if (form.middle_name.trim() && !nameRegex.test(form.middle_name.trim())) {
+            setError('Отчество может содержать только буквы');
+            return;
+        }
+
+        if (!emailRegex.test(form.email.trim())) {
+            setError('Введите корректный email');
+            return;
+        }
+
+        if (form.password.length < 6) {
+            setError('Пароль должен содержать минимум 6 символов');
+            return;
+        }
+
+        if (form.phone.trim() && !phoneRegex.test(form.phone.trim())) {
+            setError('Неверный формат номера телефона');
+            return;
+        }
+
         setLoading(true);
 
         registerUser(form)
@@ -43,6 +97,7 @@ function Register() {
                     middle_name: '',
                     phone: ''
                 });
+                navigate('/login');
             })
             .catch(error => {
                 setError(error.message || 'Ошибка регистрации');

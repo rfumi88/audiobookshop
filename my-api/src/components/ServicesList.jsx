@@ -23,6 +23,7 @@ function ServicesList() {
             .catch(error => {
                 console.error('Ошибка загрузки аудиокниг:', error);
                 setError(error.message || 'Ошибка загрузки аудиокниг');
+                
             })
             .finally(() => setLoading(false));
     }, []);
